@@ -9,16 +9,25 @@ enum ProxyType {
 
   factory ProxyType.fromString(String s) {
     final value = s.toLowerCase().trim();
-    if (value == "http" || value == "https") {
-      return ProxyType.http;
+
+    switch (value) {
+      case 'http':
+      case 'https':
+        return ProxyType.http;
+
+      case 's4':
+      case 'sock4':
+      case 'socks4':
+        return ProxyType.socks4;
+
+      case 's5':
+      case 'sock5':
+      case 'socks5':
+        return ProxyType.socks5;
+
+      default:
+        throw FormatException('invalid proxy type: $s');
     }
-    if (value == "s4" || value == "sock4" || value == "socks4") {
-      return ProxyType.socks4;
-    }
-    if (value == "s54" || value == "sock5" || value == "socks5") {
-      return ProxyType.socks5;
-    }
-    throw Exception("invalid proxy type: $s");
   }
 
   @override

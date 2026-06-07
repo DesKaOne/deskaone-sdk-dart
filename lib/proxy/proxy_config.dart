@@ -9,13 +9,13 @@ class ProxyConfig {
 
   ProxyConfig({
     required this.type,
-    required this.host,
+    required String host,
     required this.port,
     this.username,
     this.password,
-  }) {
-    if (host == '') {
-      throw FormatException('proxy host cannot be empty');
+  }) : host = host.trim() {
+    if (this.host.isEmpty) {
+      throw const FormatException('proxy host cannot be empty');
     }
 
     if (port <= 0 || port > 65535) {
@@ -30,10 +30,6 @@ class ProxyConfig {
 
     if (uri.host.trim().isEmpty) {
       throw FormatException('proxy host cannot be empty: $uri');
-    }
-
-    if (!uri.hasPort) {
-      throw FormatException('proxy port is required: $uri');
     }
 
     final auth = _parseUserInfo(uri.userInfo);

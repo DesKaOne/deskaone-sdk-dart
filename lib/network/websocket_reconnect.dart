@@ -3,6 +3,7 @@ import 'dart:io';
 
 import '../proxy/proxy_config.dart';
 import '../proxy/proxy_picker.dart';
+import 'tcp_client.dart';
 import 'websocket_client.dart';
 
 /// A reconnecting wrapper around [WebSocketClient].

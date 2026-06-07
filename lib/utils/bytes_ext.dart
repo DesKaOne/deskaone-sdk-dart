@@ -32,7 +32,10 @@ extension BytesExt on Uint8List {
       allowSpaces: allowSpaces,
     );
     if (normalized.length.isOdd) {
-      throw FormatException('hex string must contain an even number of digits', hex);
+      throw FormatException(
+        'hex string must contain an even number of digits',
+        hex,
+      );
     }
 
     final out = Uint8List(normalized.length ~/ 2);
@@ -47,8 +50,6 @@ extension BytesExt on Uint8List {
       return null;
     } on ArgumentError {
       return null;
-    } on RangeError {
-      return null;
     }
   }
 
@@ -60,7 +61,10 @@ extension BytesExt on Uint8List {
   }) {
     final normalized = _normalizeHex(hex, allow0x: allow0x);
     if (normalized.length.isOdd) {
-      throw FormatException('hex string must contain an even number of digits', hex);
+      throw FormatException(
+        'hex string must contain an even number of digits',
+        hex,
+      );
     }
     if (outOffset < 0 || outOffset > out.length) {
       throw RangeError.range(outOffset, 0, out.length, 'outOffset');
@@ -96,15 +100,16 @@ extension BytesExt on Uint8List {
       return null;
     } on ArgumentError {
       return null;
-    } on RangeError {
-      return null;
     }
   }
 
   static int hexLength(String hex, {bool allow0x = true}) {
     final normalized = _normalizeHex(hex, allow0x: allow0x);
     if (normalized.length.isOdd) {
-      throw FormatException('hex string must contain an even number of digits', hex);
+      throw FormatException(
+        'hex string must contain an even number of digits',
+        hex,
+      );
     }
     for (var i = 0; i < normalized.length; i++) {
       _hexNibble(normalized.codeUnitAt(i), hex);

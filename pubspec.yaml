@@ -1,10 +1,16 @@
 name: deskaone_sdk_dart
-description: A dependency-light Dart SDK for direct and proxied TCP, HTTP, and WebSocket clients.
+description: A dependency-light Dart SDK for direct and proxied TCP, HTTP, WebSocket, storage, and database clients.
 version: 1.0.0
 repository: https://github.com/DesKaOne/deskaone-sdk-dart
 
 environment:
   sdk: ^3.11.4
+
+dependencies:
+  path: ^1.9.1
+  pointycastle: ^4.0.0
+  postgres: ^3.5.11
+  sqlite3: ^3.3.1
 
 dev_dependencies:
   lints: ^6.0.0

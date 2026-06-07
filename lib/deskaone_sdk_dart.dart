@@ -29,3 +29,5 @@ export 'database/database_config.dart';
 export 'database/database_driver.dart';
 export 'database/postgres_database.dart';
 export 'database/sqlite_database.dart';
+
+export 'blockchain/blockchain.dart';

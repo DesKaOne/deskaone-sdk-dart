@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -799,7 +798,7 @@ Uint8List _buildHandshakeRequest({
   required List<String>? protocols,
   required String userAgent,
 }) {
-  final outHeaders = LinkedHashMap<String, String>();
+  final outHeaders = <String, String>{};
 
   final reservedHeaders = <String>{
     'host',

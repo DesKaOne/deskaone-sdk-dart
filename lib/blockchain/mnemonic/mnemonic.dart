@@ -1,3 +1,11 @@
+import '../bip/bip32.dart';
+import '../bip/bip39.dart';
+import '../bip/bip44.dart';
+import '../bip/bip49.dart';
+import '../bip/bip84.dart';
+import '../bip/coin.dart';
+import '../bip/coin_meta.dart';
+import '../bip/crypto_type.dart';
 import 'slip39/slip39.dart';
 import 'mnemonic_generator.dart';
 import 'mnemonic_type.dart';
@@ -131,6 +139,31 @@ class Mnemonic {
 
   factory Mnemonic.generateMonero({String passphrase = ''}) {
     return Mnemonic.generate(type: MnemonicType.bip39, passphrase: passphrase);
+  }
+
+  Bip39 get bip39 => Bip39.fromMnemonic(this);
+
+  Bip32 toBip32({CryptoType type = CryptoType.secp256k1}) {
+    return Bip32.fromMnemonic(
+      mnemonic: this,
+      message: CryptoTypes.getMessage(type),
+      type: type,
+      depth: 0,
+      index: 0,
+      parentFingerprint: 0,
+    );
+  }
+
+  Bip44 toBip44({required Coin coin}) {
+    return Bip44.fromMnemonic(this, CoinMeta.meta(coin: coin));
+  }
+
+  Bip49 toBip49({required Coin coin}) {
+    return Bip49.fromMnemonic(this, CoinMeta.meta(coin: coin));
+  }
+
+  Bip84 toBip84({required Coin coin}) {
+    return Bip84.fromMnemonic(this, CoinMeta.meta(coin: coin));
   }
 
   @override

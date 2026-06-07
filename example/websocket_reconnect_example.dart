@@ -1,4 +1,4 @@
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final client = ReconnectWebSocketClient(

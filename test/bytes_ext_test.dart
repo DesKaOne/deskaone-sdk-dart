@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -53,7 +53,10 @@ void main() {
   });
 
   test('throws clear errors for invalid hex options and output ranges', () {
-    expect(() => BytesExt.fromHex('0x00', allow0x: false), throwsFormatException);
+    expect(
+      () => BytesExt.fromHex('0x00', allow0x: false),
+      throwsFormatException,
+    );
     expect(() => BytesExt.fromHex('00 aa'), throwsFormatException);
     expect(
       () => BytesExt.decodeHexInto('aabb', Uint8List(1)),

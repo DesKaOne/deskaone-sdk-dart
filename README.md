@@ -27,13 +27,13 @@ dependencies:
 Import the SDK in your Dart code:
 
 ```dart
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 ```
 
 ## HTTP direct example
 
 ```dart
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final client = HTTPClient(timeout: const Duration(seconds: 15));
@@ -49,7 +49,7 @@ Future<void> main() async {
 ## HTTP over proxy example
 
 ```dart
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final proxy = ProxyConfig.fromUrlString('http://<proxy-host>:8080');
@@ -69,7 +69,7 @@ Future<void> main() async {
 ## HTTPS over proxy example
 
 ```dart
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final proxy = ProxyConfig.fromUrlString('socks5://<proxy-host>:<proxy-port>');
@@ -89,7 +89,7 @@ Future<void> main() async {
 ## WebSocket WSS example
 
 ```dart
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final ws = await WebSocketClient.connect(
@@ -120,7 +120,7 @@ Future<void> main() async {
 ## WebSocket WSS over proxy example
 
 ```dart
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final proxy = ProxyConfig.fromUrlString('socks5://<proxy-host>:<proxy-port>');
@@ -239,7 +239,7 @@ PROXY_URL=socks5://<proxy-host>:<proxy-port> dart run example/http_client_exampl
 ```dart
 import 'dart:io';
 
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 void main() {
   final proxyUrl = Platform.environment['PROXY_URL'];

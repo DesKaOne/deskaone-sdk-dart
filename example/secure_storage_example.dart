@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
+import 'package:deskaone_sdk/deskaone_sdk_dart.dart';
 
 Future<void> main() async {
   final envKey = Platform.environment['SECURE_STORAGE_KEY_HEX'];

@@ -1,35 +1,35 @@
 # DesKaOne SDK Dart
 
-[Indonesian version: README_ID.md](README_ID.md)
+[English version: README.md](README.md)
 
-DesKaOne SDK Dart is a dependency-light Dart package for opening direct or proxied TCP connections, then building HTTP and WebSocket clients on top of the same transport layer.
+DesKaOne SDK Dart adalah package Dart yang minim dependensi untuk membuka koneksi TCP secara langsung atau melalui proxy, lalu memakai transport yang sama untuk client HTTP dan WebSocket.
 
-## Features
+## Fitur
 
-- `ProxyConfig` parser for proxy URLs such as HTTP, SOCKS4, and SOCKS5.
-- `ProxyPicker` strategies: single proxy, random proxy, and round-robin proxy.
-- `TCPClient` with direct and proxy connection support.
-- HTTP proxy, SOCKS4, and SOCKS5 tunnel handlers.
-- Automatic TLS upgrade with `SecureSocket.secure()` for HTTPS and WSS connections.
-- Custom `HTTPClient` over `TCPClient`.
-- Custom `WebSocketClient` over `TCPClient`.
+- Parser `ProxyConfig` untuk URL proxy seperti HTTP, SOCKS4, dan SOCKS5.
+- Strategi `ProxyPicker`: satu proxy, proxy acak, dan round-robin.
+- `TCPClient` dengan dukungan koneksi langsung dan koneksi melalui proxy.
+- Handler tunnel untuk HTTP proxy, SOCKS4, dan SOCKS5.
+- Upgrade TLS otomatis dengan `SecureSocket.secure()` untuk koneksi HTTPS dan WSS.
+- `HTTPClient` kustom di atas `TCPClient`.
+- `WebSocketClient` kustom di atas `TCPClient`.
 
-## Installation / import
+## Instalasi / import
 
-Add this package to your `pubspec.yaml`:
+Tambahkan package ini ke `pubspec.yaml`:
 
 ```yaml
 dependencies:
   deskaone_sdk_dart: ^1.0.0
 ```
 
-Import the SDK in your Dart code:
+Import SDK di kode Dart Anda:
 
 ```dart
 import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
 ```
 
-## HTTP direct example
+## Contoh HTTP direct
 
 ```dart
 import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
@@ -45,7 +45,7 @@ Future<void> main() async {
 }
 ```
 
-## HTTP over proxy example
+## Contoh HTTP melalui proxy
 
 ```dart
 import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
@@ -65,7 +65,7 @@ Future<void> main() async {
 }
 ```
 
-## HTTPS over proxy example
+## Contoh HTTPS melalui proxy
 
 ```dart
 import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
@@ -85,7 +85,7 @@ Future<void> main() async {
 }
 ```
 
-## WebSocket WSS example
+## Contoh WebSocket WSS
 
 ```dart
 import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
@@ -116,7 +116,7 @@ Future<void> main() async {
 }
 ```
 
-## WebSocket WSS over proxy example
+## Contoh WebSocket WSS melalui proxy
 
 ```dart
 import 'package:deskaone_sdk_dart/deskaone_sdk_dart.dart';
@@ -149,9 +149,9 @@ Future<void> main() async {
 }
 ```
 
-## Environment variable proxy URL
+## Environment variable PROXY_URL
 
-Use an environment variable instead of hardcoding proxy credentials in source files:
+Gunakan environment variable agar kredensial proxy tidak ditulis langsung di source file:
 
 ```bash
 PROXY_URL=socks5://user:pass@host:port dart run example/http_client_example.dart
@@ -174,6 +174,6 @@ void main() {
 }
 ```
 
-## Security warning
+## Peringatan keamanan
 
-Never hardcode proxy credentials, API keys, tokens, passwords, or secrets in source files. Use environment variables, a secure secret manager, or your deployment platform's secret storage instead.
+Jangan pernah menulis kredensial proxy, API key, token, password, atau secret langsung di source file. Gunakan environment variable, secret manager yang aman, atau penyimpanan secret dari platform deployment Anda.

@@ -16,6 +16,11 @@ Future<void> main() async {
   final response = await client.get(Uri.parse('https://api.ipify.org/'));
 
   print(response);
-  print(response.headers);
+  print('Status code: ${response.statusCode}');
+  print('Headers:');
+  for (final entry in response.headers.entries) {
+    print('${entry.key}: ${entry.value.join(', ')}');
+  }
+  print('Body:');
   print(response.bodyAsString());
 }

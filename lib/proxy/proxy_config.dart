@@ -55,9 +55,9 @@ class ProxyConfig {
 
     // Support:
     // - http://host:port
-    // - socks5://user:pass@host:port
+    // - socks5://<proxy-host>:<proxy-port>
     // - host:port
-    // - user:pass@host:port
+    // - <user>:<password>@<host>:<port>
     final normalized = raw.contains('://')
         ? raw
         : '${defaultType.value}://$raw';

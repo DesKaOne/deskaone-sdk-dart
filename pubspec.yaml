@@ -7,6 +7,11 @@ environment:
   sdk: ^3.11.4
 
 dependencies:
+  adaptive_number: ^1.0.0
+  bs58: ^1.0.2
+  collection: ^1.19.1
+  convert: ^3.1.2
+  crypto: ^3.0.7
   path: ^1.9.1
   pointycastle: ^4.0.0
   postgres: ^3.5.11

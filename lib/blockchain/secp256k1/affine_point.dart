@@ -1,4 +1,4 @@
-part of secp256k1;
+part of 'lib_secp256k1.dart';
 
 /// Point in 2d xy affine coordinates
 class AffinePoint {

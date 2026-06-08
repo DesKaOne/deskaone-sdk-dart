@@ -27,7 +27,7 @@ class SQLiteDatabase implements DatabaseDriver {
 
   @override
   Future<void> close() async {
-    _db?.dispose();
+    _db?.close();
     _db = null;
   }
 
@@ -37,9 +37,9 @@ class SQLiteDatabase implements DatabaseDriver {
     final statement = db.prepare(sql);
     try {
       statement.execute(params);
-      return db.getUpdatedRows();
+      return db.updatedRows;
     } finally {
-      statement.dispose();
+      statement.close();
     }
   }
 

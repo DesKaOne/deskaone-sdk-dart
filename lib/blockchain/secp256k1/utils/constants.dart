@@ -1,4 +1,6 @@
-part of secp256k1;
+// ignore_for_file: non_constant_identifier_names
+
+part of '../lib_secp256k1.dart';
 
 // secp256k1 is short weierstrass curve
 final B256 = BigInt.from(2).pow(256);

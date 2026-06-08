@@ -1,4 +1,4 @@
-part of secp256k1;
+part of '../lib_secp256k1.dart';
 
 class Utilities {
   /// x³ + ax + b weierstrass formula; a=0
@@ -230,6 +230,7 @@ class Utilities {
   }
 
   /// int2octets can't be used; pads small msgs
+  // ignore: non_constant_identifier_names
   static BigInt bits2int_modN(Uint8List bytes) {
     // with 0: BAD for trunc as per RFC vectors
     return mod(bits2int(bytes), N);

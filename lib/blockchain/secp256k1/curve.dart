@@ -1,4 +1,4 @@
-part of secp256k1;
+part of 'lib_secp256k1.dart';
 
 /// exported variables incl. a, b
 class Curve {

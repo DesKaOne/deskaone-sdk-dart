@@ -1,4 +1,4 @@
-part of secp256k1;
+part of 'lib_secp256k1.dart';
 
 class DER {
   static (BigInt d, List<int> l) _parseInt(List<int> data) {

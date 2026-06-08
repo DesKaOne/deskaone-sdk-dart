@@ -1,4 +1,6 @@
-part of secp256k1;
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
+
+part of 'lib_secp256k1.dart';
 
 // Point in 3d xyz projective coordinates
 class Point {

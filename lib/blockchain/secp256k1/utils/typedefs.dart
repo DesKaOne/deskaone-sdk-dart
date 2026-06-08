@@ -1,4 +1,4 @@
-part of secp256k1;
+part of '../lib_secp256k1.dart';
 
 typedef HmacFnSync =
     Uint8List Function(Uint8List key, List<Uint8List> messages);

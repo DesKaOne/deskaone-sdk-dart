@@ -38,7 +38,9 @@ class Logger {
       displayMessage = _colorFor(normalizedLevel, displayMessage);
     }
 
-    final prefix = includeNamePrefix && name.trim().isNotEmpty ? '[$name] ' : '';
+    final prefix = includeNamePrefix && name.trim().isNotEmpty
+        ? '[$name] '
+        : '';
     return '$time | $displayLevel | $prefix$displayMessage';
   }
 

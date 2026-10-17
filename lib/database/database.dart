@@ -1,5 +1,6 @@
 import 'database_config.dart';
 import 'database_driver.dart';
+import 'migration.dart';
 import 'postgres_database.dart';
 import 'sqlite_database.dart';
 
@@ -38,6 +39,14 @@ class Database implements DatabaseDriver {
   }
 
   static Database fromUrl(String url) => Database(DatabaseConfig.fromUrl(url));
+
+  /// Applies ordered SQL statements inside a transaction.
+  Future<void> migrate(Iterable<String> statements) =>
+      DatabaseMigrations.run(_driver, statements);
+
+  /// Loads and applies Go-style .sql migration files in order.
+  Future<void> migrateFiles(Iterable<String> paths) =>
+      DatabaseMigrations.runFiles(_driver, paths);
 
   @override
   bool get isOpen => _driver.isOpen;

@@ -66,7 +66,9 @@ class Socks4TunnelConn implements TcpConnection {
     _timer?.cancel();
 
     await _subscription.cancel();
-    await _controller.close();
+    // A single-subscription controller's close future can wait forever
+    // when no consumer subscribed (e.g. rejected proxy handshakes).
+    unawaited(_controller.close());
 
     try {
       await socket.close();
@@ -159,6 +161,14 @@ class Socks4TunnelConn implements TcpConnection {
     }
 
     _controller.close();
+  }
+
+  /// Stop reading the raw socket before dart:io takes it over for TLS.
+  void prepareForTlsUpgrade() {
+    if (!_replyDone || _closed) {
+      throw StateError('SOCKS4 tunnel is not ready for TLS upgrade');
+    }
+    _subscription.pause();
   }
 
   Future<_Socks4ReplyReadResult> get _readReply {

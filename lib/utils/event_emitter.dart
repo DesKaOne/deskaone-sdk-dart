@@ -6,7 +6,11 @@ class _Listener<D, E> {
   final EventHandler<D, E> handler;
   final bool once;
 
-  const _Listener({required this.id, required this.handler, required this.once});
+  const _Listener({
+    required this.id,
+    required this.handler,
+    required this.once,
+  });
 }
 
 /// A small generic event emitter with integer listener ids.

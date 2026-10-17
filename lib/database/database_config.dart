@@ -84,7 +84,8 @@ class DatabaseConfig {
               ? null
               : Uri.decodeComponent(uri.userInfo.split(':').first),
           password: _passwordFromUserInfo(uri.userInfo),
-          ssl: sslMode == 'require' ||
+          ssl:
+              sslMode == 'require' ||
               sslMode == 'verify-full' ||
               sslMode == 'verify-ca',
           url: url,

@@ -131,7 +131,8 @@ class SecureStorage {
   Future<void> setInt(String key, int value) => set(key, value);
   Future<void> setDouble(String key, double value) => set(key, value);
   Future<void> setBool(String key, bool value) => set(key, value);
-  Future<void> setJson(String key, Map<String, dynamic> value) => set(key, value);
+  Future<void> setJson(String key, Map<String, dynamic> value) =>
+      set(key, value);
   Future<void> setStringList(String key, List<String> value) => set(key, value);
 
   Future<void> delete(String key) async {
@@ -161,6 +162,66 @@ class SecureStorage {
       return false;
     }
   }
+
+  /// Exports a plaintext JSON snapshot like Go Storage.ExportJSON.
+  ///
+  /// Warning: the returned text contains unencrypted application data.
+  String exportJson({bool pretty = true}) {
+    _ensureInitialized();
+    if (pretty) {
+      return const JsonEncoder.withIndent('  ').convert(_data);
+    }
+    return jsonEncode(_data);
+  }
+
+  /// Explicitly writes a plaintext JSON snapshot for Go-style interoperability.
+  /// Do not write secrets to unprotected/shared paths.
+  Future<void> exportJsonToFile(String path, {bool pretty = true}) async {
+    _ensureInitialized();
+    await _ensureParentDirectory(path);
+    await File(path).writeAsString(exportJson(pretty: pretty));
+  }
+
+  /// Replaces the full map with a JSON object and persists it encrypted.
+  Future<void> importJson(String text) async {
+    _ensureInitialized();
+    final decoded = jsonDecode(text);
+    if (decoded is! Map) {
+      throw const FormatException('storage import root must be a JSON object');
+    }
+    _data = decoded.map((key, value) => MapEntry(key.toString(), value));
+    await _save();
+  }
+
+  Future<void> importJsonFile(String path) async {
+    await importJson(await File(path).readAsString());
+  }
+
+  /// Merges JSON object keys into the existing encrypted store.
+  Future<void> mergeJson(String text) async {
+    _ensureInitialized();
+    final decoded = jsonDecode(text);
+    if (decoded is! Map) {
+      throw const FormatException('storage merge root must be a JSON object');
+    }
+    _data.addAll(decoded.map((key, value) => MapEntry(key.toString(), value)));
+    await _save();
+  }
+
+  Future<void> mergeJsonFile(String path) async {
+    await mergeJson(await File(path).readAsString());
+  }
+
+  /// Go SetAuto / SetStruct equivalent: normalize through JSON serialization.
+  Future<void> setAuto(String key, Object? value) async {
+    await set(key, jsonDecode(jsonEncode(value)));
+  }
+
+  Future<void> setStruct(String key, Map<String, dynamic> value) =>
+      setAuto(key, value);
+
+  Future<void> setListStruct(String key, Iterable<Object?> values) =>
+      setAuto(key, values.toList());
 
   Future<void> reload() async {
     _ensureInitialized();
@@ -194,7 +255,9 @@ class SecureStorage {
     final plainText = utf8.decode(_decryptFile(Uint8List.fromList(encoded)));
     final decoded = jsonDecode(plainText);
     if (decoded is! Map) {
-      throw const SecureStorageException('secure storage JSON root must be an object');
+      throw const SecureStorageException(
+        'secure storage JSON root must be an object',
+      );
     }
     return decoded.map((key, value) => MapEntry(key.toString(), value));
   }
@@ -202,7 +265,9 @@ class SecureStorage {
   Uint8List _encodeStore(Map<String, dynamic> data) {
     final jsonText = jsonEncode(data);
     final plain = Uint8List.fromList(utf8.encode(jsonText));
-    final iv = Uint8List.fromList(List<int>.generate(_ivLength, (_) => _random.nextInt(256)));
+    final iv = Uint8List.fromList(
+      List<int>.generate(_ivLength, (_) => _random.nextInt(256)),
+    );
     final ciphertext = _cryptPadded(encrypt: true, input: plain, iv: iv);
 
     final body = BytesBuilder(copy: false)
@@ -231,7 +296,9 @@ class SecureStorage {
     final actualHmac = Uint8List.sublistView(bytes, bodyLength);
     final expectedHmac = _hmac(body);
     if (!_constantTimeEquals(actualHmac, expectedHmac)) {
-      throw const SecureStorageException('secure storage HMAC verification failed');
+      throw const SecureStorageException(
+        'secure storage HMAC verification failed',
+      );
     }
 
     var offset = 0;
@@ -254,9 +321,15 @@ class SecureStorage {
     final ciphertextLength = _readUint32(bytes, offset);
     offset += 4;
     if (offset + ciphertextLength != bodyLength) {
-      throw const SecureStorageException('invalid secure storage ciphertext length');
+      throw const SecureStorageException(
+        'invalid secure storage ciphertext length',
+      );
     }
-    final ciphertext = Uint8List.sublistView(bytes, offset, offset + ciphertextLength);
+    final ciphertext = Uint8List.sublistView(
+      bytes,
+      offset,
+      offset + ciphertextLength,
+    );
     return _cryptPadded(encrypt: false, input: ciphertext, iv: iv);
   }
 
@@ -286,7 +359,9 @@ class SecureStorage {
 
   Future<void> _writeAtomic(File file, Uint8List bytes) async {
     await _ensureParentDirectory(file.path);
-    final temp = File('${file.path}.tmp.${DateTime.now().microsecondsSinceEpoch}');
+    final temp = File(
+      '${file.path}.tmp.${DateTime.now().microsecondsSinceEpoch}',
+    );
     await temp.writeAsBytes(bytes, flush: true);
     if (await file.exists()) {
       await file.delete();
@@ -296,8 +371,13 @@ class SecureStorage {
 
   Future<void> _writeDebugDump() async {
     final dump = const JsonEncoder.withIndent('  ').convert(_data);
-    await _writeAtomic(File(debugFilePath), Uint8List.fromList(utf8.encode(dump)));
-    logger?.warn('SecureStorage debug JSON dump is enabled; plaintext data is exposed.');
+    await _writeAtomic(
+      File(debugFilePath),
+      Uint8List.fromList(utf8.encode(dump)),
+    );
+    logger?.warn(
+      'SecureStorage debug JSON dump is enabled; plaintext data is exposed.',
+    );
   }
 
   void _ensureInitialized() {

@@ -110,6 +110,8 @@ class WebSocketClient {
     int sourcePort = 0,
     String? serverName,
     SecurityContext? securityContext,
+    SecurityContext? proxySecurityContext,
+    BadCertificateCallback? onBadProxyCertificate,
     BadCertificateCallback? onBadCertificate,
     List<String>? supportedProtocols = const ['http/1.1'],
     String userAgent = 'DesKaOneDart/0.0.1',
@@ -143,6 +145,8 @@ class WebSocketClient {
       secure: secure,
       serverName: serverName ?? host,
       securityContext: securityContext,
+      proxySecurityContext: proxySecurityContext,
+      onBadProxyCertificate: onBadProxyCertificate,
       onBadCertificate: onBadCertificate,
       supportedProtocols: supportedProtocols,
     );

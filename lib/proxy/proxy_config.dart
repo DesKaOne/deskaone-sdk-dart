@@ -24,8 +24,10 @@ class ProxyConfig {
   }
 
   factory ProxyConfig.fromUrl(Uri uri) {
-    if (!uri.hasAuthority) {
-      throw FormatException('invalid proxy uri: $uri');
+    if (!uri.hasAuthority || !uri.hasPort) {
+      throw const FormatException(
+        'proxy URL must include host and explicit port',
+      );
     }
 
     if (uri.host.trim().isEmpty) {
@@ -95,9 +97,20 @@ class ProxyConfig {
     );
   }
 
+  /// Full URL for explicit serialization. Contains credentials if configured.
+  String toUrlString() => toUri.toString();
+
+  /// Safe display string: never print the proxy password.
   @override
   String toString() {
-    return toUri.toString();
+    final user = username;
+    final auth = user == null || password == null
+        ? ''
+        : '${Uri.encodeComponent(user)}:***@';
+    final addressHost = host.contains(':') && !host.startsWith('[')
+        ? '[$host]'
+        : host;
+    return '${type.value}://$auth$addressHost:$port';
   }
 
   static ({String? username, String? password}) _parseUserInfo(

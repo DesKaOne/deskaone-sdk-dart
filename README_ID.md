@@ -4,6 +4,36 @@
 
 DesKaOne SDK Dart adalah package Dart yang minim dependensi untuk membuka koneksi TCP secara langsung atau melalui proxy, lalu memakai transport yang sama untuk client HTTP dan WebSocket.
 
+## Status porting dari SDK Go
+
+SecureStorage sekarang mempunyai helper `exportJson`, `importJson`,
+`mergeJson`, `setAuto` dan varian untuk file, mengikuti API Storage Go.
+Export JSON berisi plaintext, sedangkan file terenkripsi Go dan Dart
+**tidak kompatibel secara byte-for-byte**.
+
+
+Branch `feat/go-sdk-parity` menambahkan `ProxyType.https`, handler
+TLS ke HTTPS proxy (verifikasi sertifikat default), API database
+`BaseEngine<Entity, Key>` dan migrasi SQL dalam transaksi. API Dart
+sebelumnya tetap tersedia. Lihat [PORTING_STATUS.md](PORTING_STATUS.md)
+untuk matriks fitur Go/Dart.
+
+**Batasan:** HTTPS/WSS tujuan lewat HTTPS proxy membutuhkan TLS-in-TLS
+yang belum didukung oleh implementasi ini. SDK Dart menolak kombinasi
+tersebut dengan error eksplisit. HTTPS/WSS lewat HTTP CONNECT biasa,
+SOCKS4 dan SOCKS5 tetap tersedia.
+
+Contoh HTTPS proxy ke tujuan HTTP:
+
+```dart
+final proxy = ProxyConfig.fromUrlString('https://proxy.example.com:8443');
+final client = HTTPClient(proxyConfig: proxy);
+final response = await client.get(Uri.parse('http://example.com/'));
+```
+
+Go `BaseEngine` sekarang tersedia melalui `EngineSpec`, `BaseEngine`,
+`SqlDialect`, dan `DatabaseMigrations` untuk SQLite/PostgreSQL.
+
 ## Fitur
 
 - Parser `ProxyConfig` untuk URL proxy seperti HTTP, SOCKS4, dan SOCKS5.

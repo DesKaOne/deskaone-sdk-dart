@@ -1,5 +1,6 @@
 enum ProxyType {
   http("http"),
+  https("https"),
   socks4("socks4"),
   socks5("socks5");
 
@@ -12,8 +13,10 @@ enum ProxyType {
 
     switch (value) {
       case 'http':
-      case 'https':
         return ProxyType.http;
+
+      case 'https':
+        return ProxyType.https;
 
       case 's4':
       case 'sock4':

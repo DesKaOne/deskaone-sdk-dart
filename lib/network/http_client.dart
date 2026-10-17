@@ -67,6 +67,8 @@ class HTTPClient {
   final int sourcePort;
 
   final SecurityContext? securityContext;
+  final SecurityContext? proxySecurityContext;
+  final BadCertificateCallback? onBadProxyCertificate;
   final BadCertificateCallback? onBadCertificate;
 
   /// Karena client ini HTTP/1.1 manual, jangan isi h2.
@@ -86,6 +88,8 @@ class HTTPClient {
     this.sourceAddress,
     this.sourcePort = 0,
     this.securityContext,
+    this.proxySecurityContext,
+    this.onBadProxyCertificate,
     this.onBadCertificate,
     this.supportedProtocols = const ['http/1.1'],
     this.userAgent = 'DesKaOneDart/0.0.1',
@@ -307,6 +311,8 @@ class HTTPClient {
       secure: secure,
       serverName: host,
       securityContext: securityContext,
+      proxySecurityContext: proxySecurityContext,
+      onBadProxyCertificate: onBadProxyCertificate,
       onBadCertificate: onBadCertificate,
       supportedProtocols: supportedProtocols,
     );

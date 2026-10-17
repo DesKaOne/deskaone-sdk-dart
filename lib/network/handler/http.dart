@@ -70,7 +70,9 @@ class HttpTunnelConn implements TcpConnection {
     _timer?.cancel();
 
     await _subscription.cancel();
-    await _controller.close();
+    // A single-subscription controller's close future can wait forever
+    // when no consumer subscribed (e.g. rejected proxy handshakes).
+    unawaited(_controller.close());
 
     try {
       await socket.close();
@@ -120,7 +122,10 @@ class HttpTunnelConn implements TcpConnection {
 
     _buffer.addAll(data);
 
-    if (_buffer.length > maxHttpHeaderSize) {
+    final index = _indexOfBytes(_buffer, const [13, 10, 13, 10]);
+    final headerEnd = index < 0 ? _buffer.length : index + 4;
+
+    if (headerEnd > maxHttpHeaderSize) {
       final err = const HttpProxyException(
         'HTTP CONNECT response header too large',
       );
@@ -133,12 +138,9 @@ class HttpTunnelConn implements TcpConnection {
       return;
     }
 
-    final index = _indexOfBytes(_buffer, const [13, 10, 13, 10]);
     if (index < 0) {
       return;
     }
-
-    final headerEnd = index + 4;
 
     final headers = Uint8List.fromList(_buffer.sublist(0, headerEnd));
     final leftover = Uint8List.fromList(_buffer.sublist(headerEnd));

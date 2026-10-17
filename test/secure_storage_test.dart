@@ -150,4 +150,48 @@ void main() {
     final decoded = jsonDecode(await debugFile.readAsString());
     expect(decoded['name'], 'visible-in-debug');
   });
+
+  test('Go-style JSON export, import, merge and auto setters', () async {
+    final store = storage();
+    await store.initialize();
+
+    await store.setAuto('nested', <String, Object?>{
+      'enabled': true,
+      'count': 42,
+    });
+    await store.setListStruct('items', [
+      <String, Object?>{'id': 1},
+      <String, Object?>{'id': 2},
+    ]);
+    expect(store.getJson('nested'), {'enabled': true, 'count': 42});
+    expect(store.getListData('items'), hasLength(2));
+
+    final exported = store.exportJson();
+    expect(jsonDecode(exported)['nested']['count'], 42);
+
+    await store.importJson('{"new": "value"}');
+    expect(store.getString('new'), 'value');
+    expect(store.containsKey('nested'), isFalse);
+
+    await store.mergeJson('{"count": 3}');
+    expect(store.getInt('count'), 3);
+
+    final exportPath = '${tempDir.path}/snapshot.json';
+    await store.exportJsonToFile(exportPath);
+    final saved = jsonDecode(await File(exportPath).readAsString());
+    expect(saved['new'], 'value');
+
+    await store.clear();
+    await store.importJsonFile(exportPath);
+    expect(store.getString('new'), 'value');
+
+    await File(exportPath).writeAsString('{"joined": true}');
+    await store.mergeJsonFile(exportPath);
+    expect(store.getBool('joined'), isTrue);
+
+    await expectLater(
+      store.importJson('["not an object"]'),
+      throwsFormatException,
+    );
+  });
 }

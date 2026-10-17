@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import '../../proxy/proxy_config.dart';
-import '../tcp_connection.dart';
 import 'http.dart';
 
 /// HTTPS proxies negotiate TLS with the proxy *before* HTTP CONNECT.

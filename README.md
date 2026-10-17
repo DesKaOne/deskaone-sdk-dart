@@ -227,6 +227,8 @@ await storage.setString('username', 'deskaone-user');
 print(storage.getString('username'));
 ```
 
+Go-style JSON snapshots are also available via `exportJson`, `importJson`, `mergeJson`, and file variants. **Exports are plaintext**, so do not write them to shared directories. The encrypted Go legacy storage files are not binary-compatible with Dart SecureStorage.
+
 See `example/secure_storage_example.dart`.
 
 ## SQLite database

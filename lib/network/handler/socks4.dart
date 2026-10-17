@@ -161,6 +161,14 @@ class Socks4TunnelConn implements TcpConnection {
     _controller.close();
   }
 
+  /// Stop reading the raw socket before dart:io takes it over for TLS.
+  void prepareForTlsUpgrade() {
+    if (!_replyDone || _closed) {
+      throw StateError('SOCKS4 tunnel is not ready for TLS upgrade');
+    }
+    _subscription.pause();
+  }
+
   Future<_Socks4ReplyReadResult> get _readReply {
     return _replyCompleter.future;
   }

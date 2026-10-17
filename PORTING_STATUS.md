@@ -21,7 +21,7 @@ This file documents actual implemented APIs, not promises of future parity.
 | Typed generic BaseEngine CRUD, batch, upsert, pagination | `EngineSpec`, `BaseEngine`, `SqlDialect` | Ported in this branch (query-based interface) |
 | Transactional database migrations and SQL file loader | `DatabaseMigrations`; `Database.migrate` / `migrateFiles` | Ported in this branch |
 | SQLite / PostgreSQL database access | `Database`, `SQLiteDatabase`, `PostgresDatabase` | Already implemented; database pooling and Go's SQLite maintenance ticker are not ported |
-| Go Storage encrypted key-value / backup | `SecureStorage` | Similar API, **not binary-format compatible**: Go uses legacy CBC, Dart uses authenticated encryption format |
+| Go Storage encrypted key-value, backup, JSON export/import/merge and auto setters | `SecureStorage` | API port extended in this branch; **not binary-format compatible**: Go uses legacy CBC, Dart uses authenticated encryption format |
 | Debouncer / EventEmitter / Logger / terminal colors | `utils/*` | Already implemented |
 | `termcolor` Windows terminal flags | `utils/term_color.dart` | Similar behavior; platform-specific differences |
 | Go's CLI examples | `example/*` | Network / DB / storage examples provided; not a one-to-one CLI translation |

@@ -6,6 +6,12 @@ DesKaOne SDK Dart adalah package Dart yang minim dependensi untuk membuka koneks
 
 ## Status porting dari SDK Go
 
+SecureStorage sekarang mempunyai helper `exportJson`, `importJson`,
+`mergeJson`, `setAuto` dan varian untuk file, mengikuti API Storage Go.
+Export JSON berisi plaintext, sedangkan file terenkripsi Go dan Dart
+**tidak kompatibel secara byte-for-byte**.
+
+
 Branch `feat/go-sdk-parity` menambahkan `ProxyType.https`, handler
 TLS ke HTTPS proxy (verifikasi sertifikat default), API database
 `BaseEngine<Entity, Key>` dan migrasi SQL dalam transaksi. API Dart

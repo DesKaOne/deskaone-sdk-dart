@@ -163,6 +163,66 @@ class SecureStorage {
     }
   }
 
+  /// Exports a plaintext JSON snapshot like Go Storage.ExportJSON.
+  ///
+  /// Warning: the returned text contains unencrypted application data.
+  String exportJson({bool pretty = true}) {
+    _ensureInitialized();
+    if (pretty) {
+      return const JsonEncoder.withIndent('  ').convert(_data);
+    }
+    return jsonEncode(_data);
+  }
+
+  /// Explicitly writes a plaintext JSON snapshot for Go-style interoperability.
+  /// Do not write secrets to unprotected/shared paths.
+  Future<void> exportJsonToFile(String path, {bool pretty = true}) async {
+    _ensureInitialized();
+    await _ensureParentDirectory(path);
+    await File(path).writeAsString(exportJson(pretty: pretty));
+  }
+
+  /// Replaces the full map with a JSON object and persists it encrypted.
+  Future<void> importJson(String text) async {
+    _ensureInitialized();
+    final decoded = jsonDecode(text);
+    if (decoded is! Map) {
+      throw const FormatException('storage import root must be a JSON object');
+    }
+    _data = decoded.map((key, value) => MapEntry(key.toString(), value));
+    await _save();
+  }
+
+  Future<void> importJsonFile(String path) async {
+    await importJson(await File(path).readAsString());
+  }
+
+  /// Merges JSON object keys into the existing encrypted store.
+  Future<void> mergeJson(String text) async {
+    _ensureInitialized();
+    final decoded = jsonDecode(text);
+    if (decoded is! Map) {
+      throw const FormatException('storage merge root must be a JSON object');
+    }
+    _data.addAll(decoded.map((key, value) => MapEntry(key.toString(), value)));
+    await _save();
+  }
+
+  Future<void> mergeJsonFile(String path) async {
+    await mergeJson(await File(path).readAsString());
+  }
+
+  /// Go SetAuto / SetStruct equivalent: normalize through JSON serialization.
+  Future<void> setAuto(String key, Object? value) async {
+    await set(key, jsonDecode(jsonEncode(value)));
+  }
+
+  Future<void> setStruct(String key, Map<String, dynamic> value) =>
+      setAuto(key, value);
+
+  Future<void> setListStruct(String key, Iterable<Object?> values) =>
+      setAuto(key, values.toList());
+
   Future<void> reload() async {
     _ensureInitialized();
     try {

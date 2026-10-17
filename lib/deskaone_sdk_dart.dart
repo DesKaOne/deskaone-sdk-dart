@@ -17,6 +17,7 @@ export 'utils/logger.dart';
 export 'utils/term_color.dart';
 
 export 'network/handler/http.dart';
+export 'network/handler/https.dart';
 export 'network/handler/socks4.dart';
 export 'network/handler/socks5.dart';
 
@@ -25,6 +26,8 @@ export 'utils/bytes_ext.dart';
 export 'storage/secure_storage.dart';
 
 export 'database/database.dart';
+export 'database/base_engine.dart';
+export 'database/migration.dart';
 export 'database/database_config.dart';
 export 'database/database_driver.dart';
 export 'database/postgres_database.dart';

@@ -70,7 +70,9 @@ class Socks5TunnelConn implements TcpConnection {
     _closed = true;
 
     await _subscription.cancel();
-    await _controller.close();
+    // A single-subscription controller's close future can wait forever
+    // when no consumer subscribed (e.g. rejected proxy handshakes).
+    unawaited(_controller.close());
 
     try {
       await socket.close();

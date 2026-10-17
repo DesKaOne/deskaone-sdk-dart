@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'handler/http.dart';
+import 'handler/https.dart';
 import 'handler/socks4.dart';
 import 'handler/socks5.dart';
 import '../proxy/proxy_config.dart';
@@ -38,6 +39,10 @@ class TCPClient {
   final String? serverName;
 
   final SecurityContext? securityContext;
+
+  /// Trust settings for the TLS connection to an HTTPS proxy (not the target).
+  final SecurityContext? proxySecurityContext;
+  final BadCertificateCallback? onBadProxyCertificate;
   final BadCertificateCallback? onBadCertificate;
   final List<String>? supportedProtocols;
 
@@ -50,6 +55,8 @@ class TCPClient {
     this.secure = false,
     this.serverName,
     this.securityContext,
+    this.proxySecurityContext,
+    this.onBadProxyCertificate,
     this.onBadCertificate,
     this.supportedProtocols,
   });
@@ -69,6 +76,16 @@ class TCPClient {
 
     if (proxy == null) {
       return _connectDirect(dstHost, port);
+    }
+
+    // Dart dart:io SecureSocket cannot wrap an already TLS-secured proxy
+    // socket with another TLS layer. Do not silently send HTTPS traffic
+    // in plaintext or claim that nested TLS was established.
+    if (secure && proxy.type == ProxyType.https) {
+      throw const TcpClientException(
+        'HTTPS destination over TLS-secured HTTPS proxy requires nested TLS, '
+        'which is not supported by dart:io SecureSocket',
+      );
     }
 
     return _connectViaProxy(proxy, dstHost, port);
@@ -151,6 +168,17 @@ class TCPClient {
           dstHost: dstHost,
           dstPort: dstPort,
           timeout: timeout,
+        );
+
+      case ProxyType.https:
+        return httpsHandlerConn(
+          conn: rawSocket,
+          proxyConfig: proxy,
+          dstHost: dstHost,
+          dstPort: dstPort,
+          timeout: timeout,
+          proxySecurityContext: proxySecurityContext,
+          onBadProxyCertificate: onBadProxyCertificate,
         );
 
       case ProxyType.socks4:

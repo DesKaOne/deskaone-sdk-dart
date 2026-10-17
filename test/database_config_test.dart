@@ -41,14 +41,17 @@ void main() {
     expect(config.database, 'app_db');
   });
 
-  test('converts postgres placeholders while skipping literals and comments', () {
-    final converted = convertQuestionMarksToPostgresPlaceholders(
-      "SELECT '?' AS literal, col FROM t WHERE a = ? AND b = ? -- ?\n/* ? */",
-    );
+  test(
+    'converts postgres placeholders while skipping literals and comments',
+    () {
+      final converted = convertQuestionMarksToPostgresPlaceholders(
+        "SELECT '?' AS literal, col FROM t WHERE a = ? AND b = ? -- ?\n/* ? */",
+      );
 
-    expect(
-      converted,
-      "SELECT '?' AS literal, col FROM t WHERE a = @p1 AND b = @p2 -- ?\n/* ? */",
-    );
-  });
+      expect(
+        converted,
+        "SELECT '?' AS literal, col FROM t WHERE a = @p1 AND b = @p2 -- ?\n/* ? */",
+      );
+    },
+  );
 }

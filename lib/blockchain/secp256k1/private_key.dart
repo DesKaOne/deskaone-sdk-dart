@@ -26,9 +26,9 @@ class PrivateKey {
   /// Generates Shared Secret
   Uint8List getSharedSecret(PublicKey publicKey, [bool isCompressed = true]) {
     // ECDH
-    return Point.fromBytes(
-      publicKey.bytes,
-    ).mul(_privateKey).toRawBytes(isCompressed);
+    return Point.fromBytes(publicKey.bytes)
+        .mul(_privateKey)
+        .toRawBytes(isCompressed);
   }
 
   Uint8List bytes() => Utilities.bigIntToBytes(_privateKey);

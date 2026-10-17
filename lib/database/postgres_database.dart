@@ -203,8 +203,8 @@ String _connectionUrl(DatabaseConfig config) {
   final userInfo = user == null
       ? null
       : password == null
-          ? Uri.encodeComponent(user)
-          : '${Uri.encodeComponent(user)}:${Uri.encodeComponent(password)}';
+      ? Uri.encodeComponent(user)
+      : '${Uri.encodeComponent(user)}:${Uri.encodeComponent(password)}';
   final query = <String, String>{
     ...config.options,
     if (config.ssl) 'sslmode': 'require',

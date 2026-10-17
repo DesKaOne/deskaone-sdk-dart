@@ -35,8 +35,7 @@ class SqlDialect {
 
   String quoted(List<String> names) => names.map(quote).join(', ');
 
-  String placeholders(int count) =>
-      List<String>.filled(count, '?').join(', ');
+  String placeholders(int count) => List<String>.filled(count, '?').join(', ');
 
   String insert(
     String table,
@@ -128,10 +127,7 @@ class BaseEngine<Entity, Key> {
     return values;
   }
 
-  Future<int> save(
-    Entity entity, {
-    InsertMode mode = InsertMode.insert,
-  }) {
+  Future<int> save(Entity entity, {InsertMode mode = InsertMode.insert}) {
     final query = sql.insert(
       spec.table,
       spec.columns,
@@ -160,10 +156,7 @@ class BaseEngine<Entity, Key> {
     });
   }
 
-  Future<int> upsert(
-    Entity entity, {
-    List<String> updateColumns = const [],
-  }) {
+  Future<int> upsert(Entity entity, {List<String> updateColumns = const []}) {
     final query = sql.insert(
       spec.table,
       spec.columns,
@@ -195,7 +188,8 @@ class BaseEngine<Entity, Key> {
   }
 
   Future<Entity?> find(Key key) async {
-    final query = 'SELECT ${sql.quoted(spec.columns)} FROM $_table '
+    final query =
+        'SELECT ${sql.quoted(spec.columns)} FROM $_table '
         'WHERE ${sql.whereKey(spec.keyColumns)} LIMIT 1';
     final row = await driver.queryOne(query, spec.keyArgs(key));
     return row == null ? null : spec.fromRow(row);

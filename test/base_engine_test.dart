@@ -19,10 +19,8 @@ class TestRecordSpec implements EngineSpec<TestRecord, int> {
   @override
   List<Object?> keyArgs(int id) => [id];
   @override
-  TestRecord fromRow(Map<String, Object?> row) => (
-    id: row['id'] as int,
-    name: row['name'] as String,
-  );
+  TestRecord fromRow(Map<String, Object?> row) =>
+      (id: row['id'] as int, name: row['name'] as String);
 }
 
 void main() {
@@ -54,7 +52,9 @@ void main() {
     final db = Database.sqlite(':memory:');
     await db.open();
     try {
-      await db.execute('CREATE TABLE items (id INTEGER PRIMARY KEY, name TEXT)');
+      await db.execute(
+        'CREATE TABLE items (id INTEGER PRIMARY KEY, name TEXT)',
+      );
       final engine = BaseEngine<TestRecord, int>(
         driver: db,
         dialect: DatabaseDialect.sqlite,
@@ -62,10 +62,7 @@ void main() {
       );
 
       await engine.save((id: 1, name: 'alpha'));
-      await engine.saveBatch([
-        (id: 2, name: 'beta'),
-        (id: 3, name: 'gamma'),
-      ]);
+      await engine.saveBatch([(id: 2, name: 'beta'), (id: 3, name: 'gamma')]);
       expect(await engine.count(), 3);
       expect((await engine.find(2))?.name, 'beta');
 

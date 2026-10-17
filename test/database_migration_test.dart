@@ -12,7 +12,10 @@ void main() {
         'CREATE TABLE test_items (id INTEGER)',
         'INSERT INTO test_items VALUES (1)',
       ]);
-      expect((await db.queryOne('SELECT COUNT(*) AS n FROM test_items'))?['n'], 1);
+      expect(
+        (await db.queryOne('SELECT COUNT(*) AS n FROM test_items'))?['n'],
+        1,
+      );
 
       await expectLater(
         db.migrate([
@@ -21,7 +24,10 @@ void main() {
         ]),
         throwsStateError,
       );
-      expect((await db.queryOne('SELECT COUNT(*) AS n FROM test_items'))?['n'], 1);
+      expect(
+        (await db.queryOne('SELECT COUNT(*) AS n FROM test_items'))?['n'],
+        1,
+      );
     } finally {
       await db.close();
     }

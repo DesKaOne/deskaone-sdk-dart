@@ -25,7 +25,9 @@ class ProxyConfig {
 
   factory ProxyConfig.fromUrl(Uri uri) {
     if (!uri.hasAuthority || !uri.hasPort) {
-      throw const FormatException('proxy URL must include host and explicit port');
+      throw const FormatException(
+        'proxy URL must include host and explicit port',
+      );
     }
 
     if (uri.host.trim().isEmpty) {

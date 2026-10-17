@@ -2,6 +2,7 @@ library secp256k1;
 
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:pointycastle/digests/sha256.dart' as sha;
 import 'package:pointycastle/macs/hmac.dart' as hmac;
 import 'package:pointycastle/pointycastle.dart' as pointy;

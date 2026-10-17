@@ -98,7 +98,7 @@ class SqlDialect {
   }
 }
 
-/// Strongly typed CRUD helper mirroring the Go BaseEngine<E, K>.
+/// Strongly typed CRUD helper mirroring Go's `BaseEngine<E, K>`.
 ///
 /// The same API works on SQLite and PostgreSQL; transactions are delegated to
 /// each database driver. Identifiers are validated; values use bound params.

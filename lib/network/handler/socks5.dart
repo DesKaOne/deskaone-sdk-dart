@@ -90,6 +90,14 @@ class Socks5TunnelConn implements TcpConnection {
     socket.destroy();
   }
 
+  /// Stop reading the raw socket before dart:io takes it over for TLS.
+  void prepareForTlsUpgrade() {
+    if (!_handshakeDone || _closed) {
+      throw StateError('SOCKS5 tunnel is not ready for TLS upgrade');
+    }
+    _subscription.pause();
+  }
+
   Future<Uint8List> _readExact(
     int length, {
     Duration timeout = Duration.zero,

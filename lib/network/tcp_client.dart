@@ -157,7 +157,7 @@ class TCPClient {
         tunnel.prepareForTlsUpgrade();
       }
 
-      return _secureSocket(socket: tunnel.socket, host: dstHost);
+      return await _secureSocket(socket: tunnel.socket, host: dstHost);
     } catch (_) {
       rawSocket.destroy();
       rethrow;

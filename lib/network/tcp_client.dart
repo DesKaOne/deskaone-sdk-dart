@@ -147,6 +147,16 @@ class TCPClient {
         return tunnel;
       }
 
+      // Each proxy handler has an active raw-socket listener during its
+      // handshake. Pause it before SecureSocket.secure takes ownership.
+      if (tunnel is HttpTunnelConn) {
+        tunnel.prepareForTlsUpgrade();
+      } else if (tunnel is Socks4TunnelConn) {
+        tunnel.prepareForTlsUpgrade();
+      } else if (tunnel is Socks5TunnelConn) {
+        tunnel.prepareForTlsUpgrade();
+      }
+
       return _secureSocket(socket: tunnel.socket, host: dstHost);
     } catch (_) {
       rawSocket.destroy();

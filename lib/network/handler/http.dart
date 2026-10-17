@@ -183,6 +183,14 @@ class HttpTunnelConn implements TcpConnection {
     _controller.close();
   }
 
+  /// Stop consuming the underlying socket before dart:io upgrades it to TLS.
+  void prepareForTlsUpgrade() {
+    if (!_headerDone || _closed) {
+      throw StateError('HTTP CONNECT is not ready for TLS upgrade');
+    }
+    _subscription.pause();
+  }
+
   Future<_HttpHeaderReadResult> get _readHeader {
     return _headerCompleter.future;
   }

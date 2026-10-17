@@ -6,14 +6,52 @@ DesKaOne SDK Dart is a dependency-light Dart package for opening direct or proxi
 
 ## Features
 
-- `ProxyConfig` parser for proxy URLs such as HTTP, SOCKS4, and SOCKS5.
+- `ProxyConfig` parser for proxy URLs such as HTTP, HTTPS, SOCKS4, and SOCKS5.
 - `ProxyPicker` strategies: single proxy, random proxy, and round-robin proxy.
 - `TCPClient` with direct and proxy connection support.
-- HTTP proxy, SOCKS4, and SOCKS5 tunnel handlers.
-- Automatic TLS upgrade with `SecureSocket.secure()` for HTTPS and WSS connections.
+- HTTP and verified TLS HTTPS CONNECT proxy handlers, SOCKS4 and SOCKS5 tunnel handlers.
+- Automatic TLS upgrade with `SecureSocket.secure()` for direct HTTPS/WSS and plaintext HTTP/SOCKS tunnels.
 - Custom `HTTPClient` over `TCPClient`.
 - Custom `WebSocketClient` over `TCPClient`.
 - Lightweight utilities: `Debouncer`, `EventEmitter`, `TermColor`, `Logger`, `NetworkStream`, and `ReconnectWebSocketClient`.
+
+## Go SDK feature parity (in progress)
+
+This repository already implements HTTP, SOCKS4/5, TCP, HTTP clients, WebSockets,
+reconnect, storage, SQLite/PostgreSQL, binary streams, logging and utilities.
+This branch ports the Go SDK's **distinct HTTPS proxy transport** plus
+**typed SQL BaseEngine** and **transactional migrations** without removing the
+existing Dart blockchain modules. See [PORTING_STATUS.md](PORTING_STATUS.md).
+
+### HTTP proxy vs HTTPS proxy
+
+```dart
+// TLS connection to the proxy, then HTTP CONNECT to a plain HTTP destination.
+final proxy = ProxyConfig.fromUrlString('https://proxy.example.com:8443');
+final client = HTTPClient(proxyConfig: proxy);
+final response = await client.get(Uri.parse('http://example.com/'));
+```
+
+For a private proxy certificate authority, pass
+`proxySecurityContext: SecurityContext(withTrustedRoots: true)` with
+your trusted CA installed. Certificate verification is enabled by default;
+`onBadProxyCertificate` is an explicit override, not the default.
+
+**Limit:** `https://` *destinations* and `wss://` over a TLS-secured
+`https://` proxy need TLS-in-TLS. Dart's `SecureSocket.secure` does not
+provide a supported second TLS layer over an existing `SecureSocket`;
+the Dart SDK fails clearly for this case rather than pretending it works.
+HTTPS/WSS destinations through ordinary `http://` CONNECT and SOCKS4/5
+proxies remain supported. Source URL scheme and proxy scheme are distinct.
+
+### Go-style typed database engine
+
+`EngineSpec<Entity, Key>` maps typed entities to rows.
+`BaseEngine<Entity, Key>` supports `save`, `saveBatch`, `upsert`,
+`upsertBatch`, `find`, `loadOffset`, `loadKeyset`, `delete`,
+`deleteAll`, `count`, and `isEmptyFast`. SQL identifiers are validated;
+record values are always parameter-bound. `Database.migrate` and
+`Database.migrateFiles` run migrations in a transaction.
 
 ## Installation / import
 
